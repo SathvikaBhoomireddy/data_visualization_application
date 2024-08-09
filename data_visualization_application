@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>data-visualization</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>17</java.version>
+        <javafx.version>20.0.1</javafx.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jcommon</artifactId>
+            <version>1.0.24</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Main-Class>com.example.DataVisualizationApp</Main-Class>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+package com.example;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+public class DataVisualizationApp extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        VBox root = new VBox();
+        
+        // Create sample dataset
+        CategoryDataset dataset = createDataset();
+        JFreeChart chart = ChartUtils.createChart(dataset);
+
+        // Create ChartPanel
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+        
+        // Create button to refresh data
+        Button refreshButton = new Button("Refresh Data");
+        refreshButton.setOnAction(event -> {
+            // Handle data refresh logic here
+        });
+
+        root.getChildren().addAll(chartPanel, refreshButton);
+
+        Scene scene = new Scene(root, 800, 600);
+        primaryStage.setTitle("Data Visualization Tool");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private CategoryDataset createDataset() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(1.0, "Series1", "Category1");
+        dataset.addValue(4.0, "Series1", "Category2");
+        dataset.addValue(3.0, "Series1", "Category3");
+        dataset.addValue(5.0, "Series1", "Category4");
+        return dataset;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+package com.example;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+
+public class ChartUtils {
+
+    public static JFreeChart createChart(CategoryDataset dataset) {
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Sample Chart",
+                "Category",
+                "Value",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false
+        );
+        return chart;
+    }
+}
